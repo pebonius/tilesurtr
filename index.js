@@ -15,7 +15,8 @@ const drawText = (context, text, fontSize, color, posX, posY) => {
   context.fillText(text, posX, posY);
 };
 
-const clearContext = (context, canvas) => {
+const clearContext = (canvas) => {
+  const context = canvas.getContext("2d");
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.beginPath();
   context.rect(0, 0, canvas.width, canvas.height);
@@ -41,6 +42,8 @@ const setupCanvas = (canvas) => {
   }
 
   canvas.getContext("2d").imageSmoothingEnabled = false;
+
+  clearContext(canvas);
 };
 
 function main() {
