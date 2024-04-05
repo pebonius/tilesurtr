@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tilesetteur v0.1</title>
     <script src="index.js"></script>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    
-</body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="tileset-container">
+      <canvas width="640" height="480" id="tileset-canvas"></canvas>
+    </div>
+    <div id="map-container">
+      <canvas width="640" height="480" id="map-canvas"></canvas>
+    </div>
+    <div id="array-textarea-container">
+      <p><label for="map-array">Map array:</label></p>
+      <textarea name="map-array" id="map-array" cols="100" rows="20"></textarea>
+    </div>
+  </body>
 </html>
