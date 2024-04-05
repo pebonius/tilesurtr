@@ -1,4 +1,4 @@
 # tilesetteur
-test for tilesetting
+utility for my games for tilesetting and tilemapping
 
-Default tileset is "Town tiles" by Surt (https://opengameart.org/content/town-tiles), licensed under CC0.
+default tileset is "Town tiles" by Surt (https://opengameart.org/content/town-tiles), licensed under CC0.
