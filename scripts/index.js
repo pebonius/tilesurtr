@@ -4,6 +4,7 @@ import ContentManager from "./contentManager.js";
 import Debug from "./debug.js";
 import { clearContext } from "./graphics.js";
 import Point from "./point.js";
+import { isDefined } from "./utilities.js";
 
 const tilesetCanvas = document.getElementById("tileset-canvas");
 const tilesetCtx = tilesetCanvas.getContext("2d");
@@ -156,7 +157,16 @@ const setTilesetPointerEvent = () => {
 };
 
 const placeTile = (translatedPos) => {
-  Debug.log(`this will place tile`);
+  Debug.log(`placing tile ${selectedTile}`);
+
+  const mapPosX = Math.floor(translatedPos.x / tileSize);
+  const mapPosY = Math.floor(translatedPos.y / tileSize);
+
+  map[mapPosY][mapPosX] = selectedTile;
+
+  Debug.log(`placed tile ${selectedTile} at ${mapPosX}, ${mapPosY}`);
+
+  drawMap();
 };
 
 const setMapPointerEvent = () => {
@@ -167,6 +177,10 @@ const setMapPointerEvent = () => {
 
     const translatedPos = translatedPointerPosition(pos);
 
+    if (!isDefined(selectedTile)) {
+      Debug.log(`not placing tile, selected tile was ${selectedTile}`);
+      return;
+    }
     placeTile(translatedPos);
   };
 };
