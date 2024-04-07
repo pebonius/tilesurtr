@@ -127,7 +127,7 @@ const highlightSelectedTile = () => {
   clearContext(tilesetCtx, tilesetCanvas);
   drawTileset();
 
-  Debug.log(`highlighting tile at ${selectedRow}, ${selectedCol}`);
+  Debug.log(`highlighting tile at ${selectedCol}, ${selectedRow}`);
 
   const highlightPosX = selectedCol * tileSize * zoom;
   const highlightPosY = selectedRow * tileSize * zoom;
