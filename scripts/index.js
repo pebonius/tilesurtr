@@ -15,6 +15,8 @@ let tileset = null;
 let tileSize = 16;
 let zoom = 4;
 let selectedTile = null;
+let selectedRow = null;
+let selectedCol = null;
 
 const setupCanvas = (canvas) => {
   canvas.oncontextmenu = (e) => {
@@ -71,12 +73,12 @@ const selectTile = (pos) => {
     return;
   }
 
-  const col = Math.ceil(pos.x / tileSize) - 1;
-  const row = Math.ceil(pos.y / tileSize) - 1;
+  selectedCol = Math.ceil(pos.x / tileSize) - 1;
+  selectedRow = Math.ceil(pos.y / tileSize) - 1;
 
-  Debug.log(`selecting tile at ${col}, ${row}`);
+  Debug.log(`selecting tile at ${selectedCol}, ${selectedRow}`);
 
-  selectedTile = row * tilesetWidthInTiles() + col;
+  selectedTile = selectedRow * tilesetWidthInTiles() + selectedCol;
 
   Debug.log(`selected tile ${selectedTile}`);
 };
@@ -85,15 +87,13 @@ const highlightSelectedTile = () => {
   clearContext(tilesetCtx, tilesetCanvas);
   drawTileset();
 
-  const row = Math.floor(selectedTile / tilesetWidthInTiles());
-  const col = selectedTile - row * tilesetWidthInTiles();
+  Debug.log(`highlighting tile at ${selectedRow}, ${selectedCol}`);
 
-  Debug.log(`highlighting tile at ${row}, ${col}`);
-
-  const highlightPosX = col * tileSize * zoom;
-  const highlightPosY = row * tileSize * zoom;
+  const highlightPosX = selectedCol * tileSize * zoom;
+  const highlightPosY = selectedRow * tileSize * zoom;
 
   tilesetCtx.strokeStyle = "magenta";
+  tilesetCtx.lineWidth = 2;
   tilesetCtx.strokeRect(
     highlightPosX,
     highlightPosY,
