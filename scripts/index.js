@@ -17,6 +17,8 @@ let zoom = 4;
 let selectedTile = null;
 let selectedRow = null;
 let selectedCol = null;
+let defaultTile = 10;
+let map = null;
 
 const setupCanvas = (canvas) => {
   canvas.oncontextmenu = (e) => {
@@ -44,6 +46,35 @@ const drawTileset = () => {
   );
 };
 
+const createEmptyMap = () => {
+  map = new Array(10);
+
+  for (let y = 0; y < map.length; y++) {
+    map[y] = new Array(10);
+
+    for (let x = 0; x < map[y].length; x++) {
+      map[y][x] = defaultTile;
+    }
+  }
+};
+
+const drawMap = () => {
+  for (let y = 0; y < map.length; y++)
+    for (let x = 0; x < map[y].length; x++) {
+      mapCtx.drawImage(
+        tileset,
+        tileToCol(map[y][x]) * tileSize,
+        tileToRow(map[y][x]) * tileSize,
+        tileSize,
+        tileSize,
+        x * tileSize * zoom,
+        y * tileSize * zoom,
+        tileSize * zoom,
+        tileSize * zoom
+      );
+    }
+};
+
 const pointerPosition = (e, canvas) => {
   const rect = canvas.getBoundingClientRect();
   return new Point(e.clientX - rect.left, e.clientY - rect.top);
@@ -59,6 +90,15 @@ const tilesetWidthInTiles = () => {
 
 const tilesetHeightInTiles = () => {
   return Math.ceil(tileset.height / tileSize);
+};
+
+const tileToCol = (tile) => {
+  const row = Math.floor(tile / tilesetWidthInTiles());
+  return tile - row * tilesetWidthInTiles();
+};
+
+const tileToRow = (tile) => {
+  return Math.floor(tile / tilesetWidthInTiles());
 };
 
 const selectTile = (pos) => {
@@ -115,12 +155,31 @@ const setTilesetPointerEvent = () => {
   };
 };
 
+const placeTile = (translatedPos) => {
+  Debug.log(`this will place tile`);
+};
+
+const setMapPointerEvent = () => {
+  mapCanvas.onpointerdown = (e) => {
+    const pos = pointerPosition(e, mapCanvas);
+
+    Debug.log(`pointer down on map canvas at pos ${pos.x}, ${pos.y}`);
+
+    const translatedPos = translatedPointerPosition(pos);
+
+    placeTile(translatedPos);
+  };
+};
+
 function initialize() {
   setupCanvas(tilesetCanvas);
   setupCanvas(mapCanvas);
   setTileset();
   drawTileset();
+  createEmptyMap();
+  drawMap();
   setTilesetPointerEvent();
+  setMapPointerEvent();
 }
 
 const loadContent = () => {
