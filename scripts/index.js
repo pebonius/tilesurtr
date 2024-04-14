@@ -20,6 +20,7 @@ let selectedRow = null;
 let selectedCol = null;
 let defaultTile = 10;
 let map = null;
+let mapArray = null;
 
 const setupCanvas = (canvas) => {
   canvas.oncontextmenu = (e) => {
@@ -41,7 +42,7 @@ const resizeTilesetCanvas = () => {
   tilesetCanvas.height = tileset.height * zoom;
 
   tilesetCtx.imageSmoothingEnabled = false;
-}
+};
 
 const drawTileset = () => {
   tilesetCtx.drawImage(
@@ -109,14 +110,13 @@ const tileToRow = (tile) => {
 };
 
 const selectTile = (pos) => {
-  if (pos.x > tileset.width) {
+  if (
+    pos.x > tileset.width ||
+    pos.y > tileset.height ||
+    pos.x <= 0 ||
+    pos.y <= 0
+  ) {
     Debug.log(`pointer outside of tileset (tileset width is ${tileset.width})`);
-    return;
-  }
-  if (pos.y > tileset.height) {
-    Debug.log(
-      `pointer outside of tileset (tileset height is ${tileset.height})`
-    );
     return;
   }
 
@@ -173,6 +173,8 @@ const placeTile = (translatedPos) => {
   Debug.log(`placed tile ${selectedTile} at ${mapPosX}, ${mapPosY}`);
 
   drawMap();
+  createMapArray();
+  writeMapArray();
 };
 
 const setMapPointerEvent = () => {
@@ -191,7 +193,41 @@ const setMapPointerEvent = () => {
   };
 };
 
-function initialize() {
+const createMapArray = () => {
+  mapArray = new Array(map.length);
+
+  for (let y = 0; y < map.length; y++) {
+    let mapRow = "[";
+
+    for (let x = 0; x < map[y].length; x++) {
+      mapRow += `${map[y][x]}`;
+
+      if (x < map[y].length - 1) {
+        mapRow += ", ";
+      }
+    }
+
+    mapRow += "]";
+
+    if (y < map.length - 1) {
+      mapRow += ",\n";
+    }
+
+    mapArray[y] = mapRow;
+  }
+};
+
+const writeMapArray = () => {
+  let mapArrayString = "";
+
+  mapArray.forEach((element) => {
+    mapArrayString += `${element}`;
+  });
+
+  mapArrayTextarea.value = mapArrayString;
+};
+
+const initialize = () => {
   setupCanvas(tilesetCanvas);
   setupCanvas(mapCanvas);
   setTileset();
@@ -201,7 +237,9 @@ function initialize() {
   drawMap();
   setTilesetPointerEvent();
   setMapPointerEvent();
-}
+  createMapArray();
+  writeMapArray();
+};
 
 const loadContent = () => {
   content.onFinishedLoading = () => {
