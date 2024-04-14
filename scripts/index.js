@@ -37,6 +37,12 @@ const setTileset = () => {
   tileset = content.getAssetByName("town_tiles");
 };
 
+const resizeTilesetCanvas = () => {
+  tilesetCanvas.height = tileset.height * zoom;
+
+  tilesetCtx.imageSmoothingEnabled = false;
+}
+
 const drawTileset = () => {
   tilesetCtx.drawImage(
     tileset,
@@ -189,6 +195,7 @@ function initialize() {
   setupCanvas(tilesetCanvas);
   setupCanvas(mapCanvas);
   setTileset();
+  resizeTilesetCanvas();
   drawTileset();
   createEmptyMap();
   drawMap();
