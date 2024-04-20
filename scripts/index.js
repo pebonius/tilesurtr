@@ -4,13 +4,14 @@ import ContentManager from "./contentManager.js";
 import Debug from "./debug.js";
 import { clearContext } from "./graphics.js";
 import Point from "./point.js";
-import { isDefined } from "./utilities.js";
+import { checkForArray, cloneArray, isDefined } from "./utilities.js";
 
 const tilesetCanvas = document.getElementById("tileset-canvas");
 const tilesetCtx = tilesetCanvas.getContext("2d");
 const mapCanvas = document.getElementById("map-canvas");
 const mapCtx = mapCanvas.getContext("2d");
 const mapArrayTextarea = document.getElementById("map-array-textarea");
+const loadMapButton = document.getElementById("load-map-button");
 const content = new ContentManager();
 let tileset = null;
 let tileSize = 16;
@@ -55,15 +56,17 @@ const drawTileset = () => {
 };
 
 const createEmptyMap = () => {
-  map = new Array(10);
+  const emptyMap = new Array(10);
 
-  for (let y = 0; y < map.length; y++) {
-    map[y] = new Array(10);
+  for (let y = 0; y < emptyMap.length; y++) {
+    emptyMap[y] = new Array(10);
 
-    for (let x = 0; x < map[y].length; x++) {
-      map[y][x] = defaultTile;
+    for (let x = 0; x < emptyMap[y].length; x++) {
+      emptyMap[y][x] = defaultTile;
     }
   }
+
+  return emptyMap;
 };
 
 const drawMap = () => {
@@ -227,18 +230,61 @@ const writeMapArray = () => {
   mapArrayTextarea.value = mapArrayString;
 };
 
+const readMapFromArray = () => {
+  // should parse map from mapArrayTestarea.value
+  // this is hardcoded placeholder for now
+
+  const emptyMap = createEmptyMap();
+  return emptyMap;
+};
+
+const isValidMap = (mapToValidate) => {
+  checkForArray(mapToValidate, "mapToValidate");
+  if (mapToValidate.length !== 10) {
+    Debug.log(
+      `failed to validate map cause length was ${mapToValidate.length}`
+    );
+    return false;
+  }
+  return true;
+};
+
+const loadMap = (loadedMap) => {
+  Debug.log(`loading map...`);
+  map = cloneArray(loadedMap);
+  drawMap();
+};
+
+const tryLoadMap = () => {
+  const mapToValidate = cloneArray(readMapFromArray());
+
+  if (!isValidMap(mapToValidate)) {
+    Debug.log(`couldnt load map cause it was invalid`);
+    return;
+  }
+
+  loadMap(mapToValidate);
+};
+
+const setLoadButtonEvent = () => {
+  loadMapButton.onclick = (e) => {
+    tryLoadMap();
+  };
+};
+
 const initialize = () => {
   setupCanvas(tilesetCanvas);
   setupCanvas(mapCanvas);
   setTileset();
   resizeTilesetCanvas();
   drawTileset();
-  createEmptyMap();
+  map = createEmptyMap();
   drawMap();
   setTilesetPointerEvent();
   setMapPointerEvent();
   createMapArray();
   writeMapArray();
+  setLoadButtonEvent();
 };
 
 const loadContent = () => {
