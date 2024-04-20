@@ -5,9 +5,14 @@
   margin: 0;
 }
 
+html {
+  overscroll-behavior: none;
+}
+
 body {
   background-color: #111;
   color: #ccc;
+  overscroll-behavior: none;
   text-align: center;
 }
 
